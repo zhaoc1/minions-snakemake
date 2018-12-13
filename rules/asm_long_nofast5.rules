@@ -53,10 +53,12 @@ rule run_circlator:
   config['project_dir'] + '/06_circlator/.{barcode}_done_circlator',
  params:
   outdir = config['project_dir'] + '/06_circlator/{barcode}',
-  contigs = config['project_dir'] + '/06_circlator/{barcode}/06.fixstart.fasta'
+  contigs = config['project_dir'] + '/06_circlator/{barcode}/06.fixstart.fasta',
+  canupath = config['canu_fp']
  threads: 4
  shell:
   """
+  export PATH=$PATH:{params.canupath}
   circlator all --merge_min_id 85 --merge_breaklen 1000 --threads {threads} --verbose \
   --assembler canu --data_type nanopore-corrected --bwa_opts "-x ont2d" \
    {input.contigs} {input.correctedReads} {params.outdir}
